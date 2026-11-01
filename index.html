@@ -1,12 +1,663 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>আমার দোকান</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>glowlio | Authentic Korean Skincare</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
+        .theme-bg { background-color: #880e36; }
+        .theme-text { color: #880e36; }
+        .theme-border { border-color: #880e36; }
+
+        /* Cover Animations */
+        @keyframes floatUpDown {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-14px) rotate(1.5deg); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.7); }
+            50% { transform: scale(1.04); box-shadow: 0 0 20px 8px rgba(234, 179, 8, 0); }
+        }
+        @keyframes truckMove {
+            0% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            100% { transform: translateX(-5px); }
+        }
+        .anim-float { animation: floatUpDown 4s ease-in-out infinite; }
+        .anim-pulse-glow { animation: pulseGlow 2s infinite; }
+        .anim-truck { animation: truckMove 1.5s ease-in-out infinite; }
+    </style>
 </head>
-<body>
-  <h1>আমার দোকানে স্বাগতম</h1>
-  <p>এখানে আমার পণ্য দেখুন।</p>
+<body class="bg-[#F8F9FA] text-gray-800 flex flex-col min-h-screen">
+
+    <!-- 1. TOP NOTICE BAR (WITH ANIMATED DELIVERY TAG) -->
+    <div class="bg-[#181c20] text-gray-300 text-xs py-2 px-4 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="anim-truck inline-block text-yellow-400"><i class="fas fa-truck-fast"></i></span>
+                <span>✨ <b>ফ্রি ডেলিভারি অফার:</b> ৩টি প্রোডাক্ট অর্ডারে সারা দেশে ডেলিভারি একদম ফ্রি!</span>
+            </div>
+            <div class="hidden sm:flex items-center gap-4 text-[11px]">
+                <a href="https://wa.me/8801580600964" target="_blank" class="text-green-400 font-bold hover:underline">
+                    <i class="fab fa-whatsapp"></i> 01580600964
+                </a>
+                <span class="text-rose-400 font-bold">Facebook: @glowlio</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. MAIN HEADER -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <button onclick="goToHome()" class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight text-left">
+                glow<span class="theme-text">lio.</span>
+            </button>
+
+            <!-- Live Search Bar -->
+            <div class="flex-1 max-w-lg mx-2 relative hidden md:block">
+                <input type="text" id="searchInput" onkeyup="searchItems()" placeholder="যেকোনো স্কিনকেয়ার প্রোডাক্ট খুঁজুন..." 
+                    class="w-full pl-4 pr-10 py-2 text-xs sm:text-sm border-2 theme-border rounded-full focus:outline-none">
+                <i class="fas fa-search absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+
+            <!-- WhatsApp & Cart -->
+            <div class="flex items-center gap-3">
+                <a href="https://wa.me/8801580600964" target="_blank" class="hidden sm:flex items-center gap-1.5 text-xs font-bold text-green-700 bg-green-50 px-3 py-1.5 rounded-full border border-green-200 hover:bg-green-100 transition">
+                    <i class="fab fa-whatsapp text-base"></i> 01580600964
+                </a>
+                
+                <button onclick="toggleCart()" class="theme-bg text-white px-4 py-2 rounded-full flex items-center gap-2 shadow hover:opacity-90">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="text-xs font-bold hidden sm:inline">ব্যাগ</span>
+                    <span id="cartBadge" class="bg-yellow-400 text-gray-900 font-black text-xs w-5 h-5 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== HOME PAGE ==================== -->
+    <div id="homePage">
+        <!-- ANIMATED HERO / COVER BANNER -->
+        <section class="max-w-7xl mx-auto px-4 py-6">
+            <div class="bg-gradient-to-r from-[#880e36] via-[#6a0a29] to-[#3d0316] rounded-3xl p-6 md:p-12 text-white flex flex-col md:flex-row items-center justify-between shadow-xl relative overflow-hidden">
+                
+                <!-- Left Details -->
+                <div class="space-y-4 text-center md:text-left z-10 md:w-3/5">
+                    <!-- Animated Free Delivery Badge -->
+                    <div class="inline-flex items-center gap-2 bg-yellow-400 text-gray-950 font-black text-xs px-3.5 py-1.5 rounded-full anim-pulse-glow">
+                        <i class="fas fa-bolt text-rose-800"></i> ১০০% অথেনটিক কোরিয়ান স্কিনকেয়ার
+                    </div>
+
+                    <h1 class="text-2xl sm:text-4xl md:text-5xl font-black leading-tight">
+                        আপনার আসল সৌন্দর্যে <br><span class="text-yellow-300">প্রাকৃতিক গ্লো</span> ফিরিয়ে আনুন
+                    </h1>
+                    
+                    <p class="text-rose-100 text-xs sm:text-sm max-w-lg leading-relaxed">
+                        Ogerio অনুমোদিত সেরা ২০টি কোরিয়ান ও গ্লোবাল স্কিনকেয়ার প্রোডাক্ট। ঘরে বসেই আসল প্রোডাক্ট কিনুন ক্যাশ অন ডেলিভারিতে।
+                    </p>
+
+                    <!-- Animated Delivery Strip -->
+                    <div class="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
+                        <div class="bg-white/10 backdrop-blur border border-white/20 px-3.5 py-2 rounded-xl text-xs flex items-center gap-2">
+                            <span class="anim-truck text-yellow-300 text-sm"><i class="fas fa-truck-fast"></i></span>
+                            <span>সারাদেশে হোম ডেলিভারি</span>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur border border-white/20 px-3.5 py-2 rounded-xl text-xs flex items-center gap-2">
+                            <i class="fas fa-shield-halved text-yellow-300"></i>
+                            <span>১০০% আসল প্রোডাক্ট</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Animated Product Visual -->
+                <div class="mt-8 md:mt-0 md:w-2/5 flex justify-center relative z-10">
+                    <div class="relative anim-float">
+                        <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=500&q=80" 
+                            alt="Serum" class="w-56 sm:w-64 h-72 sm:h-80 object-cover rounded-3xl shadow-2xl border-4 border-white/20">
+                        <!-- Floating Badge on Product -->
+                        <div class="absolute -bottom-3 -left-4 bg-white text-gray-900 font-extrabold text-[11px] px-3.5 py-2 rounded-xl shadow-lg border border-gray-100 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-ping"></span>
+                            <span>রেডি স্টক এভেইলেবল</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Background Subtle Glow Circles -->
+                <div class="absolute top-0 right-0 w-72 h-72 bg-rose-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 w-72 h-72 bg-yellow-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            </div>
+        </section>
+
+        <!-- Product Grid (Home) -->
+        <main class="max-w-7xl mx-auto px-4 pb-16">
+            <div class="flex items-center justify-between border-b pb-2 mb-5">
+                <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <span class="w-2.5 h-5 theme-bg rounded-full"></span> শীর্ষ ২০টি স্কিনকেয়ার প্রোডাক্টস
+                </h2>
+                <span class="text-xs text-gray-500 font-semibold">ক্লিক করলেই বিস্তারিত পেজ আসবে</span>
+            </div>
+            <div id="homeProductGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"></div>
+        </main>
+    </div>
+
+    <!-- ==================== DEDICATED PRODUCT DETAILS PAGE ==================== -->
+    <div id="productDetailPage" class="hidden max-w-7xl mx-auto px-4 py-6 flex-1">
+        <!-- Breadcrumb & Back -->
+        <div class="flex items-center gap-2 text-xs text-gray-500 mb-5">
+            <button onclick="goToHome()" class="font-bold theme-text hover:underline flex items-center gap-1">
+                <i class="fas fa-arrow-left"></i> হোমপেজে ফিরে যান
+            </button>
+            <span>/</span>
+            <span id="pDetailBreadcrumb" class="text-gray-800 font-semibold truncate"></span>
+        </div>
+
+        <!-- Upper Details Card -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-5 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 shadow-sm">
+            <!-- Left Image -->
+            <div class="bg-gray-50 rounded-xl p-4 flex items-center justify-center relative border border-gray-100">
+                <span id="pDetailDiscountBadge" class="absolute top-4 left-4 bg-[#880e36] text-white font-extrabold text-xs px-2.5 py-1 rounded"></span>
+                <img id="pDetailImg" src="" alt="Product" class="max-h-96 w-auto object-contain rounded-lg">
+            </div>
+
+            <!-- Right Details -->
+            <div class="space-y-4">
+                <div>
+                    <span id="pDetailBrand" class="text-xs font-black uppercase tracking-wider theme-text bg-rose-50 px-2.5 py-1 rounded"></span>
+                    <h1 id="pDetailTitle" class="text-lg md:text-2xl font-bold text-gray-900 mt-2 leading-snug"></h1>
+                    
+                    <div class="flex items-center gap-3 mt-2 text-xs">
+                        <div class="flex items-center text-yellow-400">
+                            ★★★★★ <span id="pDetailReviewCount" class="text-gray-500 font-bold ml-1"></span>
+                        </div>
+                        <span class="text-gray-300">|</span>
+                        <span class="text-green-700 bg-green-100 font-bold px-2 py-0.5 rounded text-[11px]"><i class="fas fa-check-circle"></i> In Stock (রেডি স্টক)</span>
+                    </div>
+                </div>
+
+                <!-- Price Box -->
+                <div class="border-y py-3 flex items-baseline gap-3">
+                    <span id="pDetailPrice" class="text-2xl md:text-3xl font-black theme-text"></span>
+                    <span id="pDetailOldPrice" class="text-sm text-gray-400 line-through"></span>
+                    <span class="text-xs text-green-700 font-bold">(ক্যাশ অন ডেলিভারি সুবিধা)</span>
+                </div>
+
+                <!-- Qty -->
+                <div class="flex items-center gap-4 pt-1">
+                    <span class="text-xs font-bold text-gray-700">পরিমাণ:</span>
+                    <div class="flex items-center border border-gray-300 rounded-lg bg-white">
+                        <button onclick="updateQty(-1)" class="px-3 py-1 font-bold text-gray-600 hover:bg-gray-100">-</button>
+                        <span id="pDetailQty" class="px-4 py-1 text-xs font-bold">1</span>
+                        <button onclick="updateQty(1)" class="px-3 py-1 font-bold text-gray-600 hover:bg-gray-100">+</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <button onclick="addCurrentToBag()" class="w-full theme-bg hover:opacity-90 text-white font-bold py-3.5 rounded-xl shadow transition text-xs sm:text-sm flex items-center justify-center gap-2">
+                        <i class="fas fa-shopping-bag"></i> ব্যাগে যোগ করুন
+                    </button>
+                    <button onclick="buyNowDirect()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl shadow transition text-xs sm:text-sm flex items-center justify-center gap-2">
+                        <i class="fas fa-bolt"></i> এখনই কিনুন (অর্ডার)
+                    </button>
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-3.5 text-xs space-y-1.5 border border-gray-100 text-gray-600">
+                    <div class="flex items-center gap-2"><i class="fas fa-shield-halved text-rose-800"></i> ১০০% অথেনটিক কোরিয়ান ও গ্লোবাল পণ্য নিশ্চয়তা।</div>
+                    <div class="flex items-center gap-2"><i class="fas fa-truck-fast text-rose-800"></i> সারা দেশে দ্রুততম ক্যাশ অন ডেলিভারি।</div>
+                    <div class="flex items-center gap-2"><i class="fab fa-whatsapp text-green-600"></i> সরাসরি সহায়তার জন্য হেল্পলাইন: <b>01580600964</b></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lower Details Tabs -->
+        <div class="mt-8 bg-white rounded-2xl border border-gray-200 p-5 md:p-8 shadow-sm">
+            <div class="flex border-b text-xs sm:text-sm font-bold gap-6 pb-2">
+                <button onclick="switchTab('desc')" id="tabBtnDesc" class="pb-2 theme-text border-b-2 theme-border">পণ্যের বিবরণ</button>
+                <button onclick="switchTab('usage')" id="tabBtnUsage" class="pb-2 text-gray-500 hover:text-gray-800">ব্যবহার বিধি</button>
+            </div>
+            <div id="tabContentDesc" class="py-4 text-xs sm:text-sm text-gray-700 leading-relaxed"></div>
+            <div id="tabContentUsage" class="py-4 text-xs sm:text-sm text-gray-700 leading-relaxed hidden"></div>
+        </div>
+
+        <!-- ==================== ALL PRODUCTS SECTION BELOW DETAILS ==================== -->
+        <div class="mt-12 border-t pt-8">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <span class="w-2.5 h-5 theme-bg rounded-full"></span> আমাদের আরও অন্যান্য সকল প্রোডাক্টসমূহ (All Products)
+                </h3>
+                <span class="text-xs text-gray-500 font-semibold">যেকোনো প্রোডাক্টে ক্লিক করে দেখুন</span>
+            </div>
+            <!-- All other products grid -->
+            <div id="allProductsBelowGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"></div>
+        </div>
+    </div>
+
+    <!-- ==================== CHECKOUT MODAL (WITH DISTRICT & UPAZILA) ==================== -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-3">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-5 sm:p-6 relative shadow-2xl overflow-y-auto max-h-[92vh]">
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 font-bold text-xl">✕</button>
+            <h3 class="text-base font-bold text-gray-900 border-b pb-2 mb-4">অর্ডার কনফার্মেশন ফর্ম</h3>
+            
+            <form onsubmit="handleOrderSubmit(event)" class="space-y-3 text-xs sm:text-sm">
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">আপনার পূর্ণ নাম *</label>
+                    <input type="text" id="custName" required placeholder="নাম লিখুন" class="w-full border rounded-lg p-2.5 outline-none focus:border-rose-900">
+                </div>
+                
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">সচল মোবাইল নম্বর *</label>
+                    <input type="tel" id="custPhone" required placeholder="01XXXXXXXXX" class="w-full border rounded-lg p-2.5 outline-none focus:border-rose-900">
+                </div>
+
+                <!-- District & Upazila -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">জেলা (District) *</label>
+                        <select id="districtSelect" onchange="onDistrictChange()" required class="w-full border rounded-lg p-2.5 outline-none bg-white font-medium">
+                            <option value="">জেলা নির্বাচন করুন</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-bold text-gray-700 mb-1">উপজেলা / থানা *</label>
+                        <select id="upazilaSelect" required class="w-full border rounded-lg p-2.5 outline-none bg-white font-medium">
+                            <option value="">প্রথমে জেলা নির্বাচন করুন</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-gray-700 mb-1">বিস্তারিত ঠিকানা *</label>
+                    <textarea id="custAddress" required rows="2" placeholder="বাড়ি নং, রোড নং, এলাকা বা পোস্ট অফিস" class="w-full border rounded-lg p-2.5 outline-none focus:border-rose-900"></textarea>
+                </div>
+
+                <!-- Pricing Calculation -->
+                <div class="bg-rose-50 border border-rose-100 p-3 rounded-xl space-y-1 text-xs">
+                    <div class="flex justify-between"><span>প্রোডাক্ট মূল্য:</span> <span id="coSubTotalTxt" class="font-bold">৳ ০</span></div>
+                    <div class="flex justify-between"><span>ডেলিভারি চার্জ:</span> <span id="coShippingTxt" class="font-bold text-rose-800">৳ ৭০</span></div>
+                    <div class="flex justify-between text-sm font-black theme-text pt-1 border-t border-rose-200">
+                        <span>সর্বমোট প্রদেয় বিল:</span> <span id="coGrandTotalTxt">৳ ০</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full theme-bg hover:opacity-90 text-white font-bold py-3.5 rounded-xl text-sm shadow flex items-center justify-center gap-2">
+                    অর্ডার সম্পন্ন করুন <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== GUARANTEED WHATSAPP SEND MODAL ==================== -->
+    <div id="whatsappActionModal" class="fixed inset-0 bg-black/75 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl border-4 border-green-500">
+            <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-3xl mx-auto anim-pulse-glow">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+            
+            <h3 class="text-lg sm:text-xl font-extrabold text-gray-900">অর্ডারটি প্রস্তুত হয়েছে!</h3>
+            <p class="text-xs text-gray-600 leading-relaxed">
+                আপনার অর্ডারের বিবরণ নিয়ে হোয়াটসঅ্যাপে যেতে নিচের <b class="text-green-700">সবুজ বাটনে চাপ দিন</b>।
+            </p>
+
+            <!-- 100% Unblockable Direct WhatsApp Link Button -->
+            <a id="guaranteedWhatsAppBtn" href="#" target="_blank" 
+                class="block w-full bg-green-600 hover:bg-green-700 text-white font-extrabold py-3.5 px-4 rounded-xl text-sm shadow-xl flex items-center justify-center gap-2 transition hover:scale-105">
+                <i class="fab fa-whatsapp text-xl"></i> হোয়াটসঅ্যাপে পাঠিয়ে দিন (Send Order)
+            </a>
+
+            <button onclick="location.reload()" class="text-xs text-gray-400 hover:text-gray-700 underline pt-2 block mx-auto">
+                হোমপেজে ফিরে যান
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== SIDE CART DRAWER ==================== -->
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl z-50 transform translate-x-full transition duration-300 flex flex-col">
+        <div class="p-4 theme-bg text-white flex justify-between items-center">
+            <h3 class="font-bold text-sm sm:text-base flex items-center gap-2"><i class="fas fa-shopping-basket"></i> আপনার শপিং ব্যাগ</h3>
+            <button onclick="toggleCart()" class="text-white hover:text-gray-300 text-lg">✕</button>
+        </div>
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 space-y-3"></div>
+        <div class="border-t p-4 bg-gray-50 space-y-3">
+            <div class="flex justify-between items-center text-sm font-bold">
+                <span>সাবটোটাল:</span>
+                <span id="cartSubTotal" class="text-base theme-text">৳ ০</span>
+            </div>
+            <button onclick="openCheckoutFromCart()" class="w-full theme-bg text-white font-bold py-3.5 rounded-xl text-xs sm:text-sm shadow">
+                অর্ডার সম্পন্ন করুন <i class="fas fa-arrow-right ml-1"></i>
+            </button>
+        </div>
+    </div>
+    <div id="cartOverlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/8801580600964" target="_blank" class="fixed bottom-5 right-5 bg-green-500 hover:bg-green-600 text-white p-3.5 rounded-full shadow-2xl z-30 flex items-center justify-center text-2xl transition hover:scale-110 anim-pulse-glow">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer class="bg-[#121518] text-gray-400 text-xs py-8 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <h3 class="text-2xl font-black text-white">glow<span class="text-rose-500">lio.</span></h3>
+            <p>হোয়াটসঅ্যাপ হেল্পলাইন: <b>01580600964</b> | ফেসবুক পেজ: <b>@glowlio</b></p>
+            <p class="text-[11px] text-gray-600">© 2025 glowlio. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // 20 Authentic Skincare Products
+        const products = [
+            { id: 1, name: "COSRX Advanced Snail 96 Mucin Power Essence (100ml)", brand: "COSRX", price: 1450, oldPrice: 1750, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=500&q=80", desc: "৯৬.৩% শামুকের মিউসিন সমৃদ্ধ। ড্যামেজ রিপেয়ার করে ন্যাচারাল গ্লো আনে।", usage: "টোনারের পর ২-৩ ফোঁটা দিয়ে মুখে আলতোভাবে মেখে নিন।" },
+            { id: 2, name: "The Ordinary Niacinamide 10% + Zinc 1% (30ml)", brand: "The Ordinary", price: 1150, oldPrice: 1400, image: "https://images.unsplash.com/photo-1608248597359-0098f99e31d2?auto=format&fit=crop&w=500&q=80", desc: "পোরস ছোট করে এবং অতিরিক্ত তেল নিঃসরণ ও ব্রণের দাগ কমায়।", usage: "সকালে ও রাতে ক্রিম ব্যবহারের আগে পুরো মুখে লাগান।" },
+            { id: 3, name: "Beauty of Joseon Relief Sun: Rice + Probiotics SPF50+", brand: "Beauty of Joseon", price: 1350, oldPrice: 1650, image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=500&q=80", desc: "হোয়াইট কাস্ট ছাড়া লাইটওয়েট অর্গানিক সানস্ক্রিন। চালের নির্যাস ত্বক কোমল রাখে।", usage: "রোদে বের হওয়ার ১৫ মিনিট আগে মুখে ও গলায় লাগান।" },
+            { id: 4, name: "CeraVe Foaming Facial Cleanser (236ml)", brand: "CeraVe", price: 1650, oldPrice: 1950, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=500&q=80", desc: "ত্বকের আর্দ্রতা নষ্ট না করে অতিরিক্ত তেল ও ময়লা পরিষ্কার করে।", usage: "ভেজা মুখে সামান্য ফোম নিয়ে ম্যাসাজ করে ধুয়ে ফেলুন।" },
+            { id: 5, name: "Axis-Y Dark Spot Correcting Glow Serum (50ml)", brand: "Axis-Y", price: 1390, oldPrice: 1650, image: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=500&q=80", desc: "৫% নিয়াসিনামাইড সমৃদ্ধ। মেছতা ও ব্রণের জেদি দাগ দূর করতে সেরা।", usage: "রাতে পরিষ্কার মুখে দাগের জায়গায় বা পুরো মুখে মেখে নিন।" },
+            { id: 6, name: "Simple Kind to Skin Refreshing Facial Wash (150ml)", brand: "Simple", price: 490, oldPrice: 600, image: "https://images.unsplash.com/photo-1556228722-d0b777a83d1c?auto=format&fit=crop&w=500&q=80", desc: "১০০% সাবানমুক্ত ও সংবেদনশীল ত্বকের জন্য পারফেক্ট ফেসওয়াশ।", usage: "প্রতিদিন সকালে এবং রাতে নিয়মিত মুখ ধুতে ব্যবহার করুন।" },
+            { id: 7, name: "Some By Mi AHA BHA PHA 30 Days Miracle Toner", brand: "Some By Mi", price: 1250, oldPrice: 1550, image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=500&q=80", desc: "মৃত কোষ দূর করে এবং ব্রণের উপদ্রব ৩০ দিনে নিয়ন্ত্রণে আনে।", usage: "তুলায় কয়েক ফোঁটা টোনার নিয়ে আলতো করে মুখ মুছে নিন।" },
+            { id: 8, name: "Laneige Lip Sleeping Mask - Berry (20g)", brand: "Laneige", price: 1650, oldPrice: 1950, image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=500&q=80", desc: "রাতভর ফাটা ও শুষ্ক ঠোঁটে পুষ্টি দিয়ে ঠোঁট করে নরম ও গোলাপি।", usage: "রাতে ঘুমানোর আগে ঠোঁটে প্রলেপ দিয়ে সকালে মুছে ফেলুন।" },
+            { id: 9, name: "The Ordinary Hyaluronic Acid 2% + B5 (30ml)", brand: "The Ordinary", price: 1200, oldPrice: 1450, image: "https://images.unsplash.com/photo-1629732047847-50219e9c5aef?auto=format&fit=crop&w=500&q=80", desc: "ত্বকের গভীরে আর্দ্রতা ধরে রেখে বলিষ্ঠ টানটান প্লাম্পি ভাব প্রদান করে।", usage: "ভেজা মুখে ২ ফোঁটা লাগিয়ে ময়েশ্চারাইজার লাগাবেন।" },
+            { id: 10, name: "Innisfree Super Volcanic Pore Clay Mask 2X (100ml)", brand: "Innisfree", price: 1390, oldPrice: 1650, image: "https://images.unsplash.com/photo-1567928815104-b7980ee5032e?auto=format&fit=crop&w=500&q=80", desc: "জেজু ভলকানিক উপাদান দিয়ে ব্ল্যাকহেডস ও পোরসের ময়লা দূর করে।", usage: "মুখে লাগিয়ে ১০ মিনিট রেখে কুসুম গরম পানিতে ধুয়ে ফেলুন।" },
+            { id: 11, name: "COSRX Low pH Good Morning Gel Cleanser (150ml)", brand: "COSRX", price: 990, oldPrice: 1200, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=500&q=80", desc: "মৃদু পিএইচ জেল যা ত্বক শুষ্ক না করে তেল ও ময়লা দূর করে।", usage: "সকালে ঘুম থেকে উঠে মুখ ধোয়ার জন্য পারফেক্ট ক্লিনজার।" },
+            { id: 12, name: "Anua Heartleaf 77% Soothing Toner (250ml)", brand: "Anua", price: 1750, oldPrice: 2100, image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=500&q=80", desc: "কোরিয়ার এক নম্বর সুদিং টোনার। ত্বকের লালচে ভাব ও জ্বালাপোড়া কমায়।", usage: "হাত বা তুলা দিয়ে আলতো করে মুখে ট্যাপ করে লাগান।" },
+            { id: 13, name: "Round Lab Birch Juice Moisturizing Sun Cream SPF50+", brand: "Round Lab", price: 1490, oldPrice: 1800, image: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?auto=format&fit=crop&w=500&q=80", desc: "হায়ালুরোনিক সমৃদ্ধ সানস্ক্রিন যা স্কিন ময়েশ্চারাইজড ও সতেজ রাখে।", usage: "প্রতিদিন সকালে স্কিনকেয়ারের শেষ ধাপে ব্যবহার করুন।" },
+            { id: 14, name: "Skin1004 Madagascar Centella Asiatica Ampoule (55ml)", brand: "Skin1004", price: 1350, oldPrice: 1600, image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=500&q=80", desc: "১০০% সেন্টেলা যুক্ত যা একনে-প্রোন ও সেনসিটিভ স্কিন শান্ত করে।", usage: "২-৩ ফোঁটা পুরো মুখে মেখে ময়েশ্চারাইজার লাগান।" },
+            { id: 15, name: "I'm From Rice Toner (150ml)", brand: "I'm From", price: 1850, oldPrice: 2200, image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=500&q=80", desc: "৭৭.৭৮% রাইস এক্সট্র্যাক্ট সমৃদ্ধ যা ত্বক গভীর থেকে উজ্জ্বল করে।", usage: "ব্যবহারের আগে ঝাঁকিয়ে নিয়ে মুখে আলতোভাবে মেখে নিন।" },
+            { id: 16, name: "Torriden DIVE-IN Low Molecular Hyaluronic Acid Serum", brand: "Torriden", price: 1550, oldPrice: 1850, image: "https://images.unsplash.com/photo-1608248597359-0098f99e31d2?auto=format&fit=crop&w=500&q=80", desc: "৫ ধরনের হায়ালুরোনিক এসিড দিয়ে ভেতর থেকে ডিপ হাইড্রেশন দেয়।", usage: "প্রতিদিন সকালে ও রাতে টোনারের পর মুখে লাগান।" },
+            { id: 17, name: "PanOxyl 10% Benzoyl Peroxide Acne Foaming Wash (156g)", brand: "PanOxyl", price: 1850, oldPrice: 2150, image: "https://images.unsplash.com/photo-1556228722-d0b777a83d1c?auto=format&fit=crop&w=500&q=80", desc: "মুখ ও পিঠের ব্রণের জীবাণু দ্রুত মেরে ফেলে ব্রণ দূর করে।", usage: "ভেজা স্কিনে ১-২ মিনিট ম্যাসাজ করে ভালো করে ধুয়ে ফেলুন।" },
+            { id: 18, name: "Melano CC Vitamin C Brightening Essence (20ml)", brand: "Rohto Mentholatum", price: 1290, oldPrice: 1550, image: "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=500&q=80", desc: "বিশুদ্ধ ভিটামিন সি যা মেছতা ও ব্রণের দাগ হালকা করে স্কিন গ্লো করে।", usage: "দাগযুক্ত জায়গায় ৪-৫ ফোঁটা লাগিয়ে আলতোভাবে ড্যাব করুন।" },
+            { id: 19, name: "Bioderma Sensibio H2O Micellar Water (500ml)", brand: "Bioderma", price: 1790, oldPrice: 2100, image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=500&q=80", desc: "ডার্মাটোলজিস্ট রিকমেন্ডেড সেরা মেকআপ ও ডার্ট রিমুভার ক্লেনজার।", usage: "তুলায় নিয়ে চোখ ও মুখের মেকআপ এবং ময়লা মুছে নিন।" },
+            { id: 20, name: "Paula's Choice Skin Perfecting 2% BHA Liquid (118ml)", brand: "Paula's Choice", price: 2450, oldPrice: 2850, image: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=500&q=80", desc: "পোরস আনক্লগ করে এবং ব্ল্যাকহেডস চিরতরে নির্মূল করতে সেরা এক্সফোলিয়েটর।", usage: "সপ্তাহে ২-৩ দিন রাতে তুলা দিয়ে পুরো মুখে লাগান।" }
+        ];
+
+        // District Data
+        const locationData = {
+            "ঢাকা": ["ধানমন্ডি", "মিরপুর", "গুলশান", "উত্তরা", "মোহাম্মদপুর", "মতিঝিল", "বাড্ডা", "সাভার", "কেরানীগঞ্জ", "ধামরাই"],
+            "চট্টগ্রাম": ["কোতোয়ালি", "পাঁচলাইশ", "হালিশহর", "খুলশী", "সীতাকুণ্ড", "মিরসরাই", "পটিয়া", "হাটহাজারী"],
+            "গাজীপুর": ["গাজীপুর সদর", "টঙ্গী", "কালিয়াকৈর", "শ্রীপুর", "কাপাসিয়া"],
+            "নারায়ণগঞ্জ": ["নারায়ণগঞ্জ সদর", "সিদ্ধিরগঞ্জ", "ফতুল্লা", "রূপগঞ্জ", "সোনারগাঁ", "আড়াইহাজার"],
+            "সিলেট": ["কোতোয়ালি", "দক্ষিণ সুরমা", "গোলাপগঞ্জ", "বিয়ানীবাজার", "জৈন্তাপুর", "বিশ্বনাথ"],
+            "রাজশাহী": ["বোয়ালিয়া", "মতিহার", "রাজপাড়া", "শাহ মখদুম", "পবা", "বাঘা"],
+            "খুলনা": ["খুলনা সদর", "সোনাডাঙ্গা", "খালিশপুর", "দৌলতপুর", "রূপসা", "ডুমুরিয়া"],
+            "বরিশাল": ["কোতোয়ালি", "বিমানবন্দর", "বাকেরগঞ্জ", "বানারীপাড়া", "গৌরনদী"],
+            "রংপুর": ["রংপুর সদর", "কোতোয়ালি", "পীরগঞ্জ", "বদরগঞ্জ", "মিঠাপুকুর"],
+            "ময়মনসিংহ": ["ময়মনসিংহ সদর", "ত্রিশাল", "ভালুকা", "মুক্তাগাছা", "গফরগাঁও"],
+            "কুমিল্লা": ["আদর্শ সদর", "সদর দক্ষিণ", "দাউদকান্দি", "চান্দিনা", "বুড়িচং"],
+            "বগুড়া": ["বগুড়া সদর", "শেরপুর", "শিবগঞ্জ", "দুপচাঁচিয়া", "গাবতলী"],
+            "অন্যান্য জেলা": ["সদর উপজেলা", "উপজেলা ২", "উপজেলা ৩"]
+        };
+
+        let currentProduct = null;
+        let currentQty = 1;
+        let cart = [];
+
+        // Build Card HTML Helper
+        function buildCardHtml(p) {
+            const discount = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+            return `
+                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col justify-between hover:shadow-lg transition p-2.5 sm:p-3 relative group">
+                    <span class="absolute top-2 left-2 bg-[#880e36] text-white font-black text-[10px] px-1.5 py-0.5 rounded z-10">-${discount}%</span>
+
+                    <div onclick="openProductPage(${p.id})" class="cursor-pointer">
+                        <div class="relative w-full h-40 sm:h-44 overflow-hidden rounded bg-gray-50 flex items-center justify-center">
+                            <img src="${p.image}" alt="${p.name}" class="h-full w-full object-cover group-hover:scale-105 transition duration-300">
+                        </div>
+                        <span class="text-[10px] uppercase font-bold text-gray-400 mt-2 block">${p.brand}</span>
+                        <h3 class="text-xs font-semibold text-gray-800 line-clamp-2 hover:text-[#880e36] mt-0.5 leading-snug">${p.name}</h3>
+                        <div class="mt-2 flex items-baseline gap-1.5">
+                            <span class="text-sm sm:text-base font-black text-[#880e36]">৳ ${p.price}</span>
+                            <span class="text-[11px] text-gray-400 line-through">৳ ${p.oldPrice}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 grid grid-cols-2 gap-1.5">
+                        <button onclick="openProductPage(${p.id})" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 text-[11px] font-bold py-1.5 rounded transition">বিস্তারিত</button>
+                        <button onclick="quickAddToCart(${p.id})" class="w-full theme-bg hover:opacity-90 text-white text-[11px] font-bold py-1.5 rounded transition">ব্যাগে যোগ</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Catalog (Home)
+        function renderHomeCatalog(items) {
+            const grid = document.getElementById('homeProductGrid');
+            grid.innerHTML = items.map(buildCardHtml).join('');
+        }
+
+        // Open Dedicated Product Page & Render ALL Products Below
+        function openProductPage(id) {
+            currentProduct = products.find(x => x.id === id);
+            currentQty = 1;
+            document.getElementById('pDetailQty').innerText = currentQty;
+
+            const discount = Math.round(((currentProduct.oldPrice - currentProduct.price) / currentProduct.oldPrice) * 100);
+
+            document.getElementById('pDetailBreadcrumb').innerText = currentProduct.name;
+            document.getElementById('pDetailDiscountBadge').innerText = `-${discount}% ছাড়`;
+            document.getElementById('pDetailImg').src = currentProduct.image;
+            document.getElementById('pDetailBrand').innerText = currentProduct.brand;
+            document.getElementById('pDetailTitle').innerText = currentProduct.name;
+            document.getElementById('pDetailReviewCount').innerText = `(১০০% অরিজিনাল)`;
+            document.getElementById('pDetailPrice').innerText = `৳ ${currentProduct.price}`;
+            document.getElementById('pDetailOldPrice').innerText = `৳ ${currentProduct.oldPrice}`;
+
+            document.getElementById('tabContentDesc').innerText = currentProduct.desc;
+            document.getElementById('tabContentUsage').innerText = currentProduct.usage;
+
+            // Render ALL Products Below (excluding current for freshness)
+            const remaining = products.filter(x => x.id !== currentProduct.id);
+            document.getElementById('allProductsBelowGrid').innerHTML = remaining.map(buildCardHtml).join('');
+
+            // View Transition
+            document.getElementById('homePage').classList.add('hidden');
+            document.getElementById('productDetailPage').classList.remove('hidden');
+
+            switchTab('desc');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goToHome() {
+            document.getElementById('productDetailPage').classList.add('hidden');
+            document.getElementById('homePage').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function updateQty(amt) {
+            if(currentQty + amt >= 1) {
+                currentQty += amt;
+                document.getElementById('pDetailQty').innerText = currentQty;
+            }
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tabContentDesc').classList.toggle('hidden', tab !== 'desc');
+            document.getElementById('tabContentUsage').classList.toggle('hidden', tab !== 'usage');
+            document.getElementById('tabBtnDesc').className = tab === 'desc' ? "pb-2 theme-text border-b-2 theme-border font-bold" : "pb-2 text-gray-500 hover:text-gray-800";
+            document.getElementById('tabBtnUsage').className = tab === 'usage' ? "pb-2 theme-text border-b-2 theme-border font-bold" : "pb-2 text-gray-500 hover:text-gray-800";
+        }
+
+        // Cart Actions
+        function quickAddToCart(id) {
+            const prod = products.find(x => x.id === id);
+            addToCartList(prod, 1);
+            toggleCart(true);
+        }
+
+        function addCurrentToBag() {
+            addToCartList(currentProduct, currentQty);
+            toggleCart(true);
+        }
+
+        function addToCartList(prod, qty) {
+            const exist = cart.find(x => x.id === prod.id);
+            if(exist) exist.qty += qty;
+            else cart.push({ ...prod, qty });
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            document.getElementById('cartBadge').innerText = cart.reduce((acc, x) => acc + x.qty, 0);
+            const list = document.getElementById('cartItemsList');
+            list.innerHTML = '';
+
+            if(cart.length === 0) {
+                list.innerHTML = '<p class="text-center text-gray-400 py-10 text-xs">আপনার ব্যাগ খালি!</p>';
+                document.getElementById('cartSubTotal').innerText = '৳ ০';
+                return;
+            }
+
+            let sub = 0;
+            cart.forEach(item => {
+                sub += item.price * item.qty;
+                list.innerHTML += `
+                    <div class="flex items-center justify-between border-b pb-2 gap-2 text-xs">
+                        <img src="${item.image}" class="w-10 h-10 object-cover rounded">
+                        <div class="flex-1">
+                            <h4 class="font-bold line-clamp-1">${item.name}</h4>
+                            <span class="theme-text font-bold">৳ ${item.price} × ${item.qty}</span>
+                        </div>
+                        <button onclick="removeFromCart(${item.id})" class="text-gray-400 hover:text-red-500 font-bold">✕</button>
+                    </div>
+                `;
+            });
+            document.getElementById('cartSubTotal').innerText = `৳ ${sub}`;
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(x => x.id !== id);
+            updateCartUI();
+        }
+
+        function toggleCart(forceOpen = null) {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            if(forceOpen === true) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                drawer.classList.toggle('translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+        }
+
+        // Checkout & Locations
+        function initDistricts() {
+            const distSelect = document.getElementById('districtSelect');
+            distSelect.innerHTML = '<option value="">জেলা নির্বাচন করুন</option>';
+            Object.keys(locationData).forEach(d => {
+                distSelect.innerHTML += `<option value="${d}">${d}</option>`;
+            });
+        }
+
+        function onDistrictChange() {
+            const dist = document.getElementById('districtSelect').value;
+            const upaSelect = document.getElementById('upazilaSelect');
+            upaSelect.innerHTML = '<option value="">উপজেলা নির্বাচন করুন</option>';
+            
+            if(dist && locationData[dist]) {
+                locationData[dist].forEach(u => {
+                    upaSelect.innerHTML += `<option value="${u}">${u}</option>`;
+                });
+            }
+            calculateCheckoutTotal();
+        }
+
+        function buyNowDirect() {
+            cart = [{ ...currentProduct, qty: currentQty }];
+            updateCartUI();
+            openCheckoutModal();
+        }
+
+        function openCheckoutFromCart() {
+            if(cart.length === 0) return alert('ব্যাগ খালি!');
+            toggleCart(false);
+            openCheckoutModal();
+        }
+
+        function openCheckoutModal() {
+            initDistricts();
+            calculateCheckoutTotal();
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        function calculateCheckoutTotal() {
+            const sub = cart.reduce((acc, x) => acc + (x.price * x.qty), 0);
+            const dist = document.getElementById('districtSelect').value;
+            const shipping = (dist === "ঢাকা") ? 70 : 130;
+            const grand = sub + shipping;
+
+            document.getElementById('coSubTotalTxt').innerText = `৳ ${sub}`;
+            document.getElementById('coShippingTxt').innerText = `৳ ${shipping} (${dist === "ঢাকা" ? "ঢাকা সিটি" : "ঢাকার বাইরে"})`;
+            document.getElementById('coGrandTotalTxt').innerText = `৳ ${grand}`;
+        }
+
+        // ================= UNBLOCKABLE WHATSAPP SUBMIT =================
+        function handleOrderSubmit(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const dist = document.getElementById('districtSelect').value;
+            const upazila = document.getElementById('upazilaSelect').value;
+            const addr = document.getElementById('custAddress').value.trim();
+            const shipping = (dist === "ঢাকা") ? 70 : 130;
+            const sub = cart.reduce((acc, x) => acc + (x.price * x.qty), 0);
+            const grand = sub + shipping;
+            const orderId = "GLOW-" + Math.floor(1000 + Math.random() * 9000);
+
+            let msg = `*নতুন অর্ডার ইনভয়েস (${orderId})*\n`;
+            msg += `--------------------------\n`;
+            msg += `*গ্রাহকের নাম:* ${name}\n`;
+            msg += `*মোবাইল নম্বর:* ${phone}\n`;
+            msg += `*জেলা:* ${dist}\n`;
+            msg += `*উপজেলা/থানা:* ${upazila}\n`;
+            msg += `*বিস্তারিত ঠিকানা:* ${addr}\n`;
+            msg += `*ডেলিভারি চার্জ:* ৳${shipping}\n`;
+            msg += `*পেমেন্ট:* ক্যাশ অন ডেলিভারি (COD)\n\n`;
+            msg += `*অর্ডারকৃত পণ্যসমূহ:*\n`;
+            cart.forEach(item => {
+                msg += `• ${item.name} (${item.qty} টি) = ৳${item.price * item.qty}\n`;
+            });
+            msg += `--------------------------\n`;
+            msg += `*সর্বমোট বিল:* ৳${grand}\n\n`;
+            msg += `_দয়া করে অর্ডারটি কনফার্ম করুন।_`;
+
+            // Guaranteed WhatsApp Link
+            const targetPhone = "8801580600964";
+            const whatsappUrl = `https://api.whatsapp.com/send?phone=${targetPhone}&text=${encodeURIComponent(msg)}`;
+
+            // Reset UI
+            closeCheckoutModal();
+            cart = [];
+            updateCartUI();
+
+            // Set link to direct button
+            const directBtn = document.getElementById('guaranteedWhatsAppBtn');
+            directBtn.href = whatsappUrl;
+
+            // Show Confirmation Modal
+            document.getElementById('whatsappActionModal').classList.remove('hidden');
+
+            // Also try to open automatically
+            window.open(whatsappUrl, '_blank');
+        }
+
+        function searchItems() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            renderHomeCatalog(products.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q)));
+        }
+
+        // Initialize Home
+        renderHomeCatalog(products);
+    </script>
 </body>
 </html>
